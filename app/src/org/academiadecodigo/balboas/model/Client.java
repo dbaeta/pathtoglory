@@ -29,7 +29,7 @@ public class Client implements Runnable {
     public void connect(){
 
         try {
-            socket = new Socket("192.168.1.16", port);
+            socket = new Socket("localhost", port);
             writer = new PrintWriter(socket.getOutputStream(), true);
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             new Thread(this).start();

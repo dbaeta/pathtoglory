@@ -1,6 +1,5 @@
 package org.academiadecodigo.balboas;
 
-import org.academiadecodigo.balboas.services.JdbcUserService;
 import org.academiadecodigo.balboas.services.UserService;
 
 /**
@@ -14,8 +13,9 @@ public enum MessageProtocol {
     FIGHT("FIGHT");
 
     private String protocol;
-    private static JdbcUserService jdbcUserService;
+    private static UserService userService;
     public static final String DELIMITER = "##";
+    private static int playerNumber = 0;
 
 
     MessageProtocol(String protocol) {
@@ -36,24 +36,27 @@ public enum MessageProtocol {
 
         switch (protocol) {
             case LOGIN:
-                if (jdbcUserService.authenticate(splittedMessage[2], splittedMessage[3])) {
+                if (userService.authenticate(splittedMessage[2], splittedMessage[3])) {
                     System.out.println("User ok!");
                     return encode(LOGIN, "done" + DELIMITER + splittedMessage[2]);
                 }
                 break;
             case REGISTER:
-                if (jdbcUserService.addUser(splittedMessage[2], splittedMessage[3], splittedMessage[4])) {
+                if (userService.addUser(splittedMessage[2], splittedMessage[3], splittedMessage[4])) {
                     return encode(REGISTER, "done");
                 }
                 break;
             case SENDDATA:
                 System.out.println("Data received from second view");
-                jdbcUserService.registerData(splittedMessage[1], splittedMessage[2], splittedMessage[3], splittedMessage[4], splittedMessage[5]);
+                userService.registerData(splittedMessage[1], splittedMessage[2], splittedMessage[3], splittedMessage[4], splittedMessage[5]);
+                System.out.println("Sending data to player");
                 return encode(SENDDATA, "done");
             case FIGHT:
-                String life = jdbcUserService.getLife(splittedMessage[1]);
-                String strength = jdbcUserService.getStrength(splittedMessage[1]);
-                return encode(FIGHT, "done" + DELIMITER + splittedMessage[2] + DELIMITER + life + DELIMITER + strength);
+                String life = userService.getLife(splittedMessage[1]);
+                String strength = userService.getStrength(splittedMessage[1]);
+                ++playerNumber;
+                return encode(FIGHT, splittedMessage[1] + DELIMITER + "done" + DELIMITER + life + DELIMITER +
+                        strength + DELIMITER + playerNumber);
         }
         return null;
     }
@@ -65,10 +68,7 @@ public enum MessageProtocol {
     }
 
     public static void setService(UserService userService) {
-        if (userService instanceof JdbcUserService) {
-            jdbcUserService = (JdbcUserService) userService;
-
-        }
+        MessageProtocol.userService = userService;
     }
 
 }

@@ -31,6 +31,8 @@ public enum MessageProtocol {
 
         String[] splittedMessage = message.split(DELIMITER);
         MessageProtocol protocol = MessageProtocol.valueOf(splittedMessage[0]);
+        String playerName = splittedMessage[2];
+        //Check this shit
 
         System.out.println("Message received: " + message);
         if (protocol == null) {
@@ -50,7 +52,7 @@ public enum MessageProtocol {
                         mainController.setClientName(splittedMessage[2]);
                         mainController.setClient(controller.getClient());
                     });
-                    break;
+                    break;//Why diz?
                 }
                 break;
             case REGISTER:
@@ -66,7 +68,7 @@ public enum MessageProtocol {
                 break;
             case FIGHT:
                 System.out.println(message);
-                if (splittedMessage[1].equals("done")) {
+                if (splittedMessage[2].equals("done")) {
                     MainController controller = (MainController) Navigation.getInstance().getController(MainController.getName());
                     Platform.runLater(() -> {
                         Navigation.getInstance().loadScreen(FightController.getName());
@@ -77,9 +79,6 @@ public enum MessageProtocol {
                         fightController.setHealth(splittedMessage[3]);
                         fightController.setStrength(splittedMessage[4]);
                         fightController.setClient(controller.getClient());
-
-                        System.out.println("should be here");
-                        System.out.println("trying to set client to " + controller.getClient());
 
                         if (splittedMessage[5].equals("1")) {
                             System.out.println("setting client");

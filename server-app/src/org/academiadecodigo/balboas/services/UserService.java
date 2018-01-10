@@ -13,4 +13,10 @@ public interface UserService extends Service{
     boolean findByName(String username);
 
     long count();
+
+    void registerData(String name, String gym, String diet, String beer, String smoke);
+
+    String getLife(String name);
+
+    String getStrength(String name);
 }
