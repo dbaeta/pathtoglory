@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import org.academiadecodigo.balboas.sound.SoundManager;
 import org.academiadecodigo.balboas.view.Fighter;
 import org.academiadecodigo.balboas.model.Client;
 
@@ -13,8 +14,10 @@ import org.academiadecodigo.balboas.model.Client;
  */
 public class FightController implements Controller {
 
+    private SoundManager soundManager;
 
     private Fighter fighter;
+    private int playerNumber;
 
     private static final String NAME = "FightView";
 
@@ -53,7 +56,7 @@ public class FightController implements Controller {
     @FXML
     void moveLeft(ActionEvent event) {
 
-       fighter.moveLeft(player1, player2, clientName);
+        fighter.moveLeft(player1, player2, clientName);
     }
 
     @FXML
@@ -62,16 +65,20 @@ public class FightController implements Controller {
         fighter.moveRight(player1, player2, clientName);
     }
 
-    public void setHealth(String health){
+    public void setHealth(String health) {
 
         healthLabel.setText(health);
     }
 
-    public String getClientName(){
+    public String getClientName() {
         return clientName;
     }
 
-    public void setStrength(String strength){
+    public Fighter getFighter() {
+        return fighter;
+    }
+
+    public void setStrength(String strength) {
         strengthLabel.setText(strength);
     }
 
@@ -88,6 +95,23 @@ public class FightController implements Controller {
     }
 
     public void setFighter(Fighter fighter) {
+        System.out.println(fighter.getClass().getSimpleName());
+        if (fighter.getClass().getSimpleName().equals("Fighter1")) {
+            playerNumber = 1;
+        } else {
+            playerNumber = 2;
+        }
         this.fighter = fighter;
+    }
+
+    public void setOpponentPlayerPosition(String playerName, String position) {
+
+        if (!playerName.equals(clientName)) {
+            if (playerNumber == 1) {
+                player2.setX(Double.parseDouble(position));
+            } else {
+                player1.setX(Double.parseDouble(position));
+            }
+        }
     }
 }

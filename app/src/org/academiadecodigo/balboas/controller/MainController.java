@@ -9,12 +9,15 @@ import javafx.scene.control.TextField;
 import org.academiadecodigo.balboas.model.Client;
 import org.academiadecodigo.balboas.model.MessageProtocol;
 import org.academiadecodigo.balboas.model.User;
+import org.academiadecodigo.balboas.sound.SoundManager;
+import org.academiadecodigo.balboas.sound.SoundType;
 
 public class MainController implements Controller{
 
     private Client client;
     private User user;
     private static final String NAME = "mainView";
+    private SoundManager soundManager;
 
     @FXML
     private ResourceBundle resources;
@@ -63,6 +66,7 @@ public class MainController implements Controller{
     void onFightButton(ActionEvent event){
 
         String message = MessageProtocol.encode(MessageProtocol.FIGHT, "get", clientName);
+        System.out.println(clientName);
         client.sendMessage(message);
 
     }
@@ -70,6 +74,8 @@ public class MainController implements Controller{
     @FXML
     void initialize() {
 
+        soundManager = new SoundManager();
+        soundManager.loop(SoundType.START);
     }
 
     public Client getClient() {

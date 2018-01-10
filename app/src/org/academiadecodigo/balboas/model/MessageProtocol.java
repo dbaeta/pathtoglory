@@ -16,7 +16,8 @@ public enum MessageProtocol {
     LOGIN("LOGIN"),
     SENDDATA("SENDDATA"),
     FIGHT("FIGHT"),
-    ATTACK("ATTACK");
+    ATTACK("ATTACK"),
+    MOVE("MOVE");
 
     private String protocol;
     public static final String DELIMITER = "##";
@@ -29,13 +30,16 @@ public enum MessageProtocol {
 
         String[] splittedMessage = message.split(DELIMITER);
         MessageProtocol protocol = MessageProtocol.valueOf(splittedMessage[0]);
+        String playerName = splittedMessage[2];
+        //Check this shit
 
         System.out.println("Message received: " + message);
         if (protocol == null) {
-            return null;
+            System.out.println("Not a message");
         }
 
         switch (protocol) {
+
             case LOGIN:
                 if (splittedMessage[1].equals("done")) {
                     System.out.println("Entering login");
@@ -47,7 +51,7 @@ public enum MessageProtocol {
                         mainController.setClientName(splittedMessage[2]);
                         mainController.setClient(controller.getClient());
                     });
-                    break;
+                    break;//Why diz?
                 }
                 break;
             case REGISTER:
@@ -62,21 +66,27 @@ public enum MessageProtocol {
                 }
                 break;
             case FIGHT:
-                if (splittedMessage[1].equals("done")) {
+                System.out.println(message);
+                if (splittedMessage[2].equals("done")) {
                     MainController controller = (MainController) Navigation.getInstance().getController(MainController.getName());
                     Platform.runLater(() -> {
                         Navigation.getInstance().loadScreen(FightController.getName());
                         FightController fightController = (FightController) Navigation.getInstance().getController(FightController.getName());
+
                         fightController.setClient(controller.getClient());
                         fightController.setClientName(splittedMessage[2]);
                         fightController.setHealth(splittedMessage[3]);
                         fightController.setStrength(splittedMessage[4]);
                         fightController.setClient(controller.getClient());
+
                         if (splittedMessage[5].equals("1")) {
+                            System.out.println("setting client");
                             fightController.setFighter(new Fighter1());
+                            fightController.getFighter().setClient(controller.getClient());
                             return;
                         }
                         fightController.setFighter(new Fighter2());
+                        fightController.getFighter().setClient(controller.getClient());
 
                     });
                     break;
@@ -85,10 +95,21 @@ public enum MessageProtocol {
             case ATTACK:
                 FightController controller =
                 (FightController) Navigation.getInstance().getController(FightController.getName());
-                if (!splittedMessage[2].equals(controller.getClientName())) {
+                
+                if (!splittedMessage[1].equals(controller.getClientName())) {
                     controller.setHealth(splittedMessage[2]);
                 }
+
+                break;
+
+            case MOVE:
+                System.out.println("Move message: " + message);
+                FightController fightController =
+                        (FightController) Navigation.getInstance().getController(FightController.getName());
+
+                fightController.setOpponentPlayerPosition(splittedMessage[1], splittedMessage[2]);
         }
+
         return null;
     }
 

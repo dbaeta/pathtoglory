@@ -1,6 +1,9 @@
 package org.academiadecodigo.balboas;
 
+import org.academiadecodigo.balboas.persistance.ConnectionManager;
 import org.academiadecodigo.balboas.services.JdbcUserService;
+import org.academiadecodigo.balboas.services.MockUserService;
+import org.academiadecodigo.balboas.services.UserService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +25,10 @@ public class Server {
 
 
     Server() {
-        JdbcUserService jdbcUserService = new JdbcUserService();
-        MessageProtocol.setService(jdbcUserService);
+
+        //Using MockUserService, instead of JdbcUserService
+        UserService userService = new MockUserService();
+        MessageProtocol.setService(userService);
         init();
     }
 
