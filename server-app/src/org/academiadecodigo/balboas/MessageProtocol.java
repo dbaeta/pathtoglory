@@ -20,7 +20,7 @@ public enum MessageProtocol {
     MOVE("MOVE");
 
     private String protocol;
-    private static JdbcUserService jdbcUserService;
+    private static UserService jdbcUserService;
     public static final String DELIMITER = "##";
     private static Queue<String> fighters;
     private static LinkedList<Server.ServerWorker> list;
@@ -49,6 +49,10 @@ public enum MessageProtocol {
         System.out.println("Message decode from server " + message);
         String[] splittedMessage = message.split(DELIMITER);
         MessageProtocol protocol = MessageProtocol.valueOf(splittedMessage[0]);
+
+        String playerName = splittedMessage[1];
+
+        System.out.println("Player name:" + " " + playerName);
 
         System.out.println("Protocol: " + protocol);
 
@@ -132,10 +136,7 @@ public enum MessageProtocol {
     }
 
     public static void setService(UserService userService) {
-        if (userService instanceof JdbcUserService) {
-            jdbcUserService = (JdbcUserService) userService;
-
-        }
+        jdbcUserService = userService;
     }
 
 }

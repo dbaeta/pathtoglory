@@ -21,7 +21,7 @@ public class Server {
 
     private ServerSocket serverSocket;
     private ExecutorService service;
-    private int portNumber = 32323;
+    private int portNumber = 32324;
 
 
     Server() {
