@@ -106,10 +106,8 @@ public enum MessageProtocol {
                 System.out.println("Move message: " + message);
                 FightController fightController =
                         (FightController) Navigation.getInstance().getController(FightController.getName());
-
                 fightController.setOpponentPlayerPosition(splittedMessage[1], splittedMessage[2]);
         }
-
         return null;
     }
 
